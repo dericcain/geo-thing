@@ -2,19 +2,46 @@
 
 namespace GeoThing\Services;
 
+use GeoThing\Requests\GetDistanceRequest;
+
 class GetDistance
 {
 
     /**
-     * @param $param1
-     * @param $param2
+     * @var string
      */
-    public function __construct($param1, $param2)
+    private $origin;
+
+    /**
+     * @var string
+     */
+    private $destination;
+
+    /**
+     * @param $origin
+     * @param $destination
+     */
+    public function __construct($origin, $destination)
     {
+        $this->origin = $origin;
+        $this->destination = $destination;
     }
 
+    /**
+     * @return \stdClass
+     */
     public function handle()
     {
-        return true;
+        return $this->makeApiCall();
+    }
+
+    /**
+     * @return \stdClass
+     */
+    private function makeApiCall()
+    {
+        $request = new GetDistanceRequest($this->origin, $this->destination);
+
+        return $request->receive();
     }
 }

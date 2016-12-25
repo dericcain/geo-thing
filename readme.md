@@ -1,29 +1,54 @@
 #Geo Thing
 [![Build Status](https://travis-ci.org/dericcain/geo-thing.svg?branch=master)](https://travis-ci.org/dericcain/geo-thing)
 
-- [ ] Update docs
-- [x] Convert address and zip into lat and lng
-- [ ] Convert lat and lng into address
-- [ ] Get distance between two addresses
-- [ ] Get distance between two sets of coordinates
+## Description
+This is a very simple package that uses Google's API to perform a few different operations. As a default, you do not have to supply an API key but you will be limited with how many API requests you can make. If you are not making a ton of calls, this should be good enough.
 
 ## Usage
-It's fairly simple to use the package. You will need to import that package at the top of your PHP file. Once you have done that, you can use the different methods like so:
+It's fairly simple to use the package. You will need to import that package at the top of your PHP file. Once you have done that, you can use the different methods below.
 
+#### Get Coordinates from Address
 ```php
 $address = '123 Main Street';
 $zip = '32119';
 
 $results = GeoThing::getCoordinates($address, $zip);
-$lat = $results->lat // 33.5075002
-$lng = $results->lng // -86.8105789
-```
-If there are no results, or there is an error, the object returned will have an `error` attribute giving the reason for the error.
 
+$results->lat // 33.5075002
+$results->lng // -86.8105789
+$results->error // The error code from Google if there is one. This attribute will not be here if there is not error.
+```
+If there are no results, or there is an error, the object returned will have an `error` attribute giving the reason for the error. Also, the `lat` and `lng` attributes will be set to `null`.
+
+#### Get Address from Coordinates
 ```php
-GeoThing::getAddress($lat, $lng);
+$response = GeoThing::getAddress($lat, $lng);
 
-GeoThing::getDistance($lat, $lng);
-
-GeoThing::getDistance($address1, $address2);
+$response->error // This will only be set if there is an error
+$response->street_number // The number only
+$response->street_name // The name of the street
+$response->city // The full city name
+$response->state // The full state name, not the abbreviation
+$response->zip // The zip code
+$response->formatted_address // The full formated address "277 Bedford Avenue, Brooklyn, NY 11211, USA"
 ```
+
+#### Get Distance between Origin and Destination
+```php
+$response = GeoThing::getDistance($origin, $destination);
+
+$response->error // This will only be set if there is an error
+$response->distance // This will be a string like "1.2 mi" (I'll change this soon)
+$response->duration // This will also be a string as of right now
+```
+
+## TODO
+- [ ] Update docs
+- [x] Convert address and zip into lat and lng
+- [x] Convert lat and lng into address
+- [x] Get distance between two addresses
+- [ ] Get distance between two sets of coordinates
+- [ ] Convert test endpoints into mocks instead of using the live API
+- [ ] Add option to user API key
+- [ ] Convert distance and time into floats instead of strings
+- [ ] Add KM to distance as an option

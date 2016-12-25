@@ -66,7 +66,7 @@ class GetCoordinatesRequest implements RequestContract
     {
         $encodedQuery = str_replace(' ', '+', urlencode($this->address . ' ' . $this->zip));
 
-        return "http://maps.googleapis.com/maps/api/geocode/json?address={$encodedQuery}&sensor=false";
+        return "http://maps.googleapis.com/maps/api/geocode/json?address={$encodedQuery}";
     }
 
     /**
