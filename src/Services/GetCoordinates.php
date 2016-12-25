@@ -26,11 +26,17 @@ class GetCoordinates
         $this->zip = $zip;
     }
 
+    /**
+     * @return \stdClass
+     */
     public function handle()
     {
         return $this->makeApiCall();
     }
 
+    /**
+     * @return \stdClass
+     */
     private function makeApiCall()
     {
         $request = new GetCoordinatesRequest($this->address, $this->zip);

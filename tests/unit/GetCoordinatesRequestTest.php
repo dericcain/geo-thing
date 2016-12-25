@@ -5,7 +5,7 @@ use GeoThing\Requests\GetCoordinatesRequest;
 class GetCoordinatesRequestTest extends PHPUnit_Framework_TestCase
 {
     /** @test */
-    function a_request_made_to_google_should_return_a_200_status()
+    function an_address_request_should_return_an_object_with_lat_and_lng()
     {
         $address = '1401 1st Ave S';
         $zip = '35233';
