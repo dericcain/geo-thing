@@ -2,74 +2,45 @@
 
 namespace GeoThing\Services;
 
+use GeoThing\Requests\GetAddressRequest;
+
 class GetAddress
 {
     /**
      * @var string
      */
-    private $address;
+    private $lat;
 
     /**
      * @var string
      */
-    private $zipCode;
+    private $lng;
 
     /**
-     * @param $address
-     * @param $zipCode
+     * @param $lat
+     * @param $lng
      */
-    public function __construct($address, $zipCode)
+    public function __construct($lat, $lng)
     {
-        $this->address = $address;
-        $this->zipCode = $zipCode;
+        $this->lat = $lat;
+        $this->lng = $lng;
     }
 
     /**
-     * @return array|null
+     * @return \stdClass
      */
     public function handle()
     {
-        return $this->getCoordinates();
+        return $this->makeApiCall();
     }
 
     /**
-     * @return array|null
-     */
-    private function getCoordinates()
-    {
-        $response = $this->makeApiCall();
-
-        return [
-            'lat' => $response['location']['lat'] ?? null,
-            'lng' => $response['location']['lng'] ?? null,
-        ];
-    }
-
-    /**
-     * @return string
-     */
-    private function apiUrl()
-    {
-        $encodedQuery = str_replace (' ', '+', urlencode($this->address . ' ' . $this->zipCode));
-
-        return "http://maps.googleapis.com/maps/api/geocode/json?address={$encodedQuery}&sensor=false";
-    }
-
-    /**
-     * @return mixed
+     * @return \stdClass
      */
     private function makeApiCall()
     {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->apiUrl());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $response = json_decode(curl_exec($ch), true);
+        $request = new GetAddressRequest($this->lat, $this->lng);
 
-        // If Status Code is ZERO_RESULTS, OVER_QUERY_LIMIT, REQUEST_DENIED or INVALID_REQUEST
-        if ($response['status'] != 'OK') {
-            return null;
-        }
-
-        return $response['results'][0]['geometry'];
+        return $request->receive();
     }
 }

@@ -5,18 +5,17 @@ namespace GeoThing\Requests;
 use GeoThing\Contracts\RequestContract;
 use stdClass;
 
-class GetAddressRequest implements RequestContract
+class GetDistanceRequest implements RequestContract
 {
+    /**
+     * @var string
+     */
+    private $origin;
 
     /**
      * @var string
      */
-    private $lat;
-
-    /**
-     * @var string
-     */
-    private $lng;
+    private $destination;
 
     /**
      * @var array
@@ -24,13 +23,13 @@ class GetAddressRequest implements RequestContract
     private $response;
 
     /**
-     * @param $lat
-     * @param $lng
+     * @param $origin
+     * @param $destination
      */
-    public function __construct($lat, $lng)
+    public function __construct($origin, $destination)
     {
-        $this->lat = $lat;
-        $this->lng = $lng;
+        $this->origin = $origin;
+        $this->destination = $destination;
     }
 
     /**
@@ -65,9 +64,10 @@ class GetAddressRequest implements RequestContract
      */
     private function apiUrl()
     {
-        $encodedQuery = urlencode($this->lat . ',' . $this->lng);
+        $origin = str_replace(' ', '+', urlencode($this->origin));
+        $destination = str_replace(' ', '+', urlencode($this->destination));
 
-        return "http://maps.googleapis.com/maps/api/geocode/json?latlng={$encodedQuery}";
+        return "http://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins={$origin}&destinations={$destination}";
     }
 
     /**
@@ -101,12 +101,8 @@ class GetAddressRequest implements RequestContract
     {
         $response = new stdClass;
         $response->error = $this->response['status'];
-        $response->street_number = null;
-        $response->street_name = null;
-        $response->city = null;
-        $response->state = null;
-        $response->zip = null;
-        $response->formatted_address = null;
+        $response->distance = null;
+        $response->duration = null;
 
         return $response;
     }
@@ -119,12 +115,8 @@ class GetAddressRequest implements RequestContract
     private function returnResults()
     {
         $response = new stdClass;
-        $response->street_number = $this->response['results'][0]['address_components'][0]['long_name'] ?? null;
-        $response->street_name = $this->response['results'][0]['address_components'][1]['long_name'] ?? null;
-        $response->city = $this->response['results'][0]['address_components'][3]['long_name'] ?? null;
-        $response->state = $this->response['results'][0]['address_components'][5]['long_name'] ?? null;
-        $response->zip = $this->response['results'][0]['address_components'][7]['long_name'] ?? null;
-        $response->formatted_address = $this->response['results'][0]['formatted_address'] ?? null;
+        $response->distance = $this->response['rows'][0]['elements'][0]['distance']['text'] ?? null;
+        $response->duration = $this->response['rows'][0]['elements'][0]['duration']['text'] ?? null;
 
         return $response;
     }
