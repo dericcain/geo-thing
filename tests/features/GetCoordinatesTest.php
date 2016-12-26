@@ -11,10 +11,8 @@ class GetCoordinatesTest extends PHPUnit_Framework_TestCase
         $address = '1401 1st Ave S';
         $zip = '35233';
 
-        // Act
         $coordinates = GeoThing::getCoordinates($address, $zip);
 
-        // Assert
         $this->assertEquals('33.5075002', $coordinates->lat);
         $this->assertEquals('-86.8105789', $coordinates->lng);
     }

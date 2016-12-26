@@ -2,9 +2,10 @@
 
 namespace GeoThing\Services;
 
+use GeoThing\Contracts\ServicesContract;
 use GeoThing\Requests\GetDistanceRequest;
 
-class GetDistance
+class GetDistance implements ServicesContract
 {
 
     /**
@@ -31,14 +32,6 @@ class GetDistance
      * @return \stdClass
      */
     public function handle()
-    {
-        return $this->makeApiCall();
-    }
-
-    /**
-     * @return \stdClass
-     */
-    private function makeApiCall()
     {
         $request = new GetDistanceRequest($this->origin, $this->destination);
 

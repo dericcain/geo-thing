@@ -9,7 +9,6 @@ class GetAddressRequestTest extends \PHPUnit_Framework_TestCase
     /** @test */
     function lat_and_lng_return_an_address_object()
     {
-        // Arrange
         $lat = '33.5072665';
         $lng = '-86.8104413';
 
@@ -26,7 +25,6 @@ class GetAddressRequestTest extends \PHPUnit_Framework_TestCase
     /** @test */
     function bad_lat_and_lng_return_an_error_attribute()
     {
-        // Arrange
         $lat = '102934234.5072665';
         $lng = '-99999999.8104413';
 

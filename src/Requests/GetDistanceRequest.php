@@ -115,9 +115,20 @@ class GetDistanceRequest implements RequestContract
     private function returnResults()
     {
         $response = new stdClass;
-        $response->distance = $this->response['rows'][0]['elements'][0]['distance']['text'] ?? null;
-        $response->duration = $this->response['rows'][0]['elements'][0]['duration']['text'] ?? null;
+        $response->distance = $this->convertMetersToMiles($this->response['rows'][0]['elements'][0]['distance']['value']) ?? null;
+        $response->duration = $this->response['rows'][0]['elements'][0]['duration']['value'] ?? null;
 
         return $response;
+    }
+
+    /**
+     * Google only gives us meters, so we need to convert them to miles.
+     *
+     * @param $distanceInMeters
+     * @return mixed
+     */
+    private function convertMetersToMiles($distanceInMeters)
+    {
+        return $distanceInMeters * 0.000621371;
     }
 }

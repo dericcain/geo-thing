@@ -14,17 +14,6 @@ class GetDistanceTest extends \PHPUnit_Framework_TestCase
 
         $response = GeoThing::getDistance($address1, $address2);
 
-        $distance = $this->parseNumberFromString($response->distance);
-
-        $this->assertLessThan(2, $distance);
-    }
-
-    /**
-     * @param $distance
-     * @return float
-     */
-    private function parseNumberFromString($distance)
-    {
-        return (float) explode(' ', $distance)[0];
+        $this->assertLessThan(2, $response->distance);
     }
 }

@@ -2,9 +2,10 @@
 
 namespace GeoThing\Services;
 
+use GeoThing\Contracts\ServicesContract;
 use GeoThing\Requests\GetCoordinatesRequest;
 
-class GetCoordinates
+class GetCoordinates implements ServicesContract
 {
     /**
      * @var string
@@ -30,14 +31,6 @@ class GetCoordinates
      * @return \stdClass
      */
     public function handle()
-    {
-        return $this->makeApiCall();
-    }
-
-    /**
-     * @return \stdClass
-     */
-    private function makeApiCall()
     {
         $request = new GetCoordinatesRequest($this->address, $this->zip);
 

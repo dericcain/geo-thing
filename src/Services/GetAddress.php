@@ -2,9 +2,10 @@
 
 namespace GeoThing\Services;
 
+use GeoThing\Contracts\ServicesContract;
 use GeoThing\Requests\GetAddressRequest;
 
-class GetAddress
+class GetAddress implements ServicesContract
 {
     /**
      * @var string
@@ -30,14 +31,6 @@ class GetAddress
      * @return \stdClass
      */
     public function handle()
-    {
-        return $this->makeApiCall();
-    }
-
-    /**
-     * @return \stdClass
-     */
-    private function makeApiCall()
     {
         $request = new GetAddressRequest($this->lat, $this->lng);
 

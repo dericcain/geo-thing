@@ -1,7 +1,6 @@
 <?php
 
 use GeoThing\GeoThing;
-use GeoThing\Services\GetAddress;
 
 
 class GetAddressTest extends PHPUnit_Framework_TestCase

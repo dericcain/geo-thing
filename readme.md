@@ -43,12 +43,7 @@ $response->duration // This will also be a string as of right now
 ```
 
 ## TODO
-- [ ] Update docs
-- [x] Convert address and zip into lat and lng
-- [x] Convert lat and lng into address
-- [x] Get distance between two addresses
 - [ ] Get distance between two sets of coordinates
 - [ ] Convert test endpoints into mocks instead of using the live API
 - [ ] Add option to user API key
-- [ ] Convert distance and time into floats instead of strings
 - [ ] Add KM to distance as an option
