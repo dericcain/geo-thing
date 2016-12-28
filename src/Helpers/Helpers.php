@@ -24,11 +24,12 @@ if (!function_exists('getAddress')) {
     /**
      * @param $lat
      * @param $lng
+     * @param bool $apiKey
      * @return mixed
      */
-    function getAddress($lat, $lng)
+    function getAddress($lat, $lng, $apiKey = false)
     {
-        return handle(new GetAddress($lat, $lng));
+        return handle(new GetAddress($lat, $lng, $apiKey));
     }
 }
 
@@ -36,11 +37,12 @@ if (!function_exists('getCoordinates')) {
     /**
      * @param $address
      * @param $zipCode
+     * @param bool $apiKey
      * @return mixed
      */
-    function getCoordinates($address, $zipCode)
+    function getCoordinates($address, $zipCode, $apiKey = false)
     {
-        return handle(new GetCoordinates($address, $zipCode));
+        return handle(new GetCoordinates($address, $zipCode, $apiKey));
     }
 }
 
@@ -48,10 +50,11 @@ if (!function_exists('getDistance')) {
     /**
      * @param $origin
      * @param $destination
+     * @param bool $apiKey
      * @return mixed
      */
-    function getDistance($origin, $destination)
+    function getDistance($origin, $destination, $apiKey = false)
     {
-        return handle(new GetDistance($origin, $destination));
+        return handle(new GetDistance($origin, $destination, $apiKey));
     }
 }

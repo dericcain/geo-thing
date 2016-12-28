@@ -2,10 +2,9 @@
 
 namespace GeoThing\Requests;
 
-use GeoThing\Contracts\RequestContract;
 use stdClass;
 
-class GetCoordinatesRequest implements RequestContract
+class GetCoordinatesRequest extends AbstractRequest
 {
     /**
      * @var string
@@ -18,11 +17,6 @@ class GetCoordinatesRequest implements RequestContract
     private $zip;
 
     /**
-     * @var array
-     */
-    private $response;
-
-    /**
      * @param $address
      * @param $zip
      */
@@ -33,62 +27,19 @@ class GetCoordinatesRequest implements RequestContract
     }
 
     /**
-     * Return the response.
-     *
-     * @return stdClass
-     */
-    public function receive()
-    {
-        $this->send();
-
-        return $this->buildResponse();
-    }
-
-    /**
-     * Make the request.
-     *
-     * @return void
-     */
-    public function send()
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->apiUrl());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $this->response = json_decode(curl_exec($ch), true);
-    }
-
-    /**
      * We need to build the URL string.
      *
      * @return string
      */
-    private function apiUrl()
+    protected function apiUrl()
     {
         $encodedQuery = str_replace(' ', '+', urlencode($this->address . ' ' . $this->zip));
 
-        return "http://maps.googleapis.com/maps/api/geocode/json?address={$encodedQuery}";
-    }
-
-    /**
-     * @return mixed
-     */
-    private function buildResponse()
-    {
-        if ($this->hasErrorOrNoResults()) {
-            return $this->returnErrorResponse();
+        if ($this->hasApiKey()) {
+            return "{$this->baseUrl}geocode/json?address={$encodedQuery}&key={$this->apiKey}";
         }
 
-        return $this->returnResults();
-    }
-
-    /**
-     * Check to make sure the response has results and/or is not an error.
-     *
-     * @return bool
-     */
-    private function hasErrorOrNoResults()
-    {
-        return $this->response['status'] != 'OK';
+        return "{$this->baseUrl}geocode/json?address={$encodedQuery}";
     }
 
     /**
@@ -96,7 +47,7 @@ class GetCoordinatesRequest implements RequestContract
      *
      * @return stdClass
      */
-    private function returnErrorResponse()
+    protected function returnErrorResponse()
     {
         $response = new stdClass;
         $response->error = $this->response['status'];
@@ -111,7 +62,7 @@ class GetCoordinatesRequest implements RequestContract
      *
      * @return stdClass
      */
-    private function returnResults()
+    protected function returnResults()
     {
         $response = new stdClass;
         $response->lat = $this->response['results'][0]['geometry']['location']['lat'] ?? null;

@@ -19,13 +19,20 @@ class GetDistance implements ServicesContract
     private $destination;
 
     /**
+     * @var string
+     */
+    private $apiKey;
+
+    /**
      * @param $origin
      * @param $destination
+     * @param $apiKey
      */
-    public function __construct($origin, $destination)
+    public function __construct($origin, $destination, $apiKey)
     {
         $this->origin = $origin;
         $this->destination = $destination;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -33,7 +40,7 @@ class GetDistance implements ServicesContract
      */
     public function handle()
     {
-        $request = new GetDistanceRequest($this->origin, $this->destination);
+        $request = new GetDistanceRequest($this->origin, $this->destination, $this->apiKey);
 
         return $request->receive();
     }

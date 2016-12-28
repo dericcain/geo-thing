@@ -29,4 +29,14 @@ class GetCoordinatesRequestTest extends PHPUnit_Framework_TestCase
         $this->assertNull($request->receive()->lng);
         $this->assertObjectHasAttribute('error', $request->receive());
     }
+
+    /** @test */
+    function an_error_is_returned_when_using_a_bad_api_key()
+    {
+        $address = '1401 1st Ave S';
+        $zip = '35233';
+        $request = new GetCoordinatesRequest($address, $zip, 'asdfaqewrasdfxvbdfghw56wertsdfxvcbsdfgw3');
+
+        $this->assertObjectHasAttribute('error', $request->receive());
+    }
 }

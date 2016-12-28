@@ -38,4 +38,14 @@ class GetAddressRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($address->zip);
         $this->assertNull($address->formatted_address);
     }
+
+    function an_error_is_returned_when_using_a_bad_api_key()
+    {
+        $lat = '33.5072665';
+        $lng = '-86.8104413';
+
+        $address = GeoThing::getAddress($lat, $lng, 'asdfaqewrasdfxvbdfghw56wertsdfxvcbsdfgw3');
+
+        $this->assertObjectHasAttribute('error', $address);
+    }
 }

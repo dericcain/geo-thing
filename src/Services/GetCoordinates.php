@@ -18,13 +18,20 @@ class GetCoordinates implements ServicesContract
     private $zip;
 
     /**
+     * @var string
+     */
+    private $apiKey;
+
+    /**
      * @param $address
      * @param $zip
+     * @param $apiKey
      */
-    public function __construct($address, $zip)
+    public function __construct($address, $zip, $apiKey)
     {
         $this->address = $address;
         $this->zip = $zip;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -32,7 +39,7 @@ class GetCoordinates implements ServicesContract
      */
     public function handle()
     {
-        $request = new GetCoordinatesRequest($this->address, $this->zip);
+        $request = new GetCoordinatesRequest($this->address, $this->zip, $this->apiKey);
 
         return $request->receive();
     }

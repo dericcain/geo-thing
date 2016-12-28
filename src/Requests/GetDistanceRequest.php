@@ -2,10 +2,9 @@
 
 namespace GeoThing\Requests;
 
-use GeoThing\Contracts\RequestContract;
 use stdClass;
 
-class GetDistanceRequest implements RequestContract
+class GetDistanceRequest extends AbstractRequest
 {
     /**
      * @var string
@@ -18,11 +17,6 @@ class GetDistanceRequest implements RequestContract
     private $destination;
 
     /**
-     * @var array
-     */
-    private $response;
-
-    /**
      * @param $origin
      * @param $destination
      */
@@ -33,63 +27,21 @@ class GetDistanceRequest implements RequestContract
     }
 
     /**
-     * Return the response.
-     *
-     * @return stdClass
-     */
-    public function receive()
-    {
-        $this->send();
-
-        return $this->buildResponse();
-    }
-
-    /**
-     * Make the request.
-     *
-     * @return void
-     */
-    public function send()
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->apiUrl());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $this->response = json_decode(curl_exec($ch), true);
-    }
-
-    /**
      * We need to build the URL string.
      *
      * @return string
      */
-    private function apiUrl()
+    protected function apiUrl()
     {
         $origin = str_replace(' ', '+', urlencode($this->origin));
         $destination = str_replace(' ', '+', urlencode($this->destination));
 
-        return "http://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins={$origin}&destinations={$destination}";
-    }
-
-    /**
-     * @return mixed
-     */
-    private function buildResponse()
-    {
-        if ($this->hasErrorOrNoResults()) {
-            return $this->returnErrorResponse();
+        if ($this->hasApiKey()) {
+            var_dump($this->apiKey);
+            return "{$this->baseUrl}distancematrix/json?units=imperial&origins={$origin}&destinations={$destination}&key={$this->apiKey}";
         }
 
-        return $this->returnResults();
-    }
-
-    /**
-     * Check to make sure the response has results and/or is not an error.
-     *
-     * @return bool
-     */
-    private function hasErrorOrNoResults()
-    {
-        return $this->response['status'] != 'OK';
+        return "{$this->baseUrl}distancematrix/json?units=imperial&origins={$origin}&destinations={$destination}";
     }
 
     /**
@@ -97,7 +49,7 @@ class GetDistanceRequest implements RequestContract
      *
      * @return stdClass
      */
-    private function returnErrorResponse()
+    protected function returnErrorResponse()
     {
         $response = new stdClass;
         $response->error = $this->response['status'];
@@ -112,7 +64,7 @@ class GetDistanceRequest implements RequestContract
      *
      * @return stdClass
      */
-    private function returnResults()
+    protected function returnResults()
     {
         $response = new stdClass;
         $response->distance = $this->convertMetersToMiles($this->response['rows'][0]['elements'][0]['distance']['value']) ?? null;
