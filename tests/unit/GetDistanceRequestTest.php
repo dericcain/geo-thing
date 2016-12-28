@@ -27,4 +27,5 @@ class GetDistanceRequestTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf(stdClass::class, $request->receive());
         $this->assertObjectHasAttribute('error', $request->receive());
     }
+    
 }

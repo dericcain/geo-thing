@@ -10,32 +10,41 @@ class GeoThing
 {
 
     /**
+     * Takes a set of coordinates and returns the address.
+     *
      * @param $lat
      * @param $lng
+     * @param $apiKey
      * @return \stdClass
      */
-    public static function getAddress($lat, $lng)
+    public static function getAddress($lat, $lng, $apiKey = false)
     {
-        return (new GetAddress($lat, $lng))->handle();
+        return handle(new GetAddress($lat, $lng, $apiKey));
     }
 
     /**
+     * Takes an address and zip code and returns lat and lng.
+     *
      * @param $address
      * @param $zipCode
+     * @param bool $apiKey
      * @return \stdClass
      */
-    public static function getCoordinates($address, $zipCode)
+    public static function getCoordinates($address, $zipCode, $apiKey = false)
     {
-        return (new GetCoordinates($address, $zipCode))->handle();
+        return handle(new GetCoordinates($address, $zipCode, $apiKey));
     }
 
     /**
+     * Gets the distance between 2 addresses.
+     *
      * @param $origin
      * @param $destination
+     * @param bool $apiKey
      * @return \stdClass
      */
-    public static function getDistance($origin, $destination)
+    public static function getDistance($origin, $destination, $apiKey = false)
     {
-        return (new GetDistance($origin, $destination))->handle();
+        return handle(new GetDistance($origin, $destination, $apiKey));
     }
 }

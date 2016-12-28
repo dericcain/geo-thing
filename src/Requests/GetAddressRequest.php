@@ -2,10 +2,9 @@
 
 namespace GeoThing\Requests;
 
-use GeoThing\Contracts\RequestContract;
 use stdClass;
 
-class GetAddressRequest implements RequestContract
+class GetAddressRequest extends AbstractRequest
 {
 
     /**
@@ -18,78 +17,17 @@ class GetAddressRequest implements RequestContract
      */
     private $lng;
 
-    /**
-     * @var array
-     */
-    private $response;
 
     /**
      * @param $lat
      * @param $lng
+     * @param $apiKey
      */
-    public function __construct($lat, $lng)
+    public function __construct($lat, $lng, $apiKey)
     {
         $this->lat = $lat;
         $this->lng = $lng;
-    }
-
-    /**
-     * Return the response.
-     *
-     * @return stdClass
-     */
-    public function receive()
-    {
-        $this->send();
-
-        return $this->buildResponse();
-    }
-
-    /**
-     * Make the request.
-     *
-     * @return void
-     */
-    public function send()
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->apiUrl());
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $this->response = json_decode(curl_exec($ch), true);
-    }
-
-    /**
-     * We need to build the URL string.
-     *
-     * @return string
-     */
-    private function apiUrl()
-    {
-        $encodedQuery = urlencode($this->lat . ',' . $this->lng);
-
-        return "http://maps.googleapis.com/maps/api/geocode/json?latlng={$encodedQuery}";
-    }
-
-    /**
-     * @return mixed
-     */
-    private function buildResponse()
-    {
-        if ($this->hasErrorOrNoResults()) {
-            return $this->returnErrorResponse();
-        }
-
-        return $this->returnResults();
-    }
-
-    /**
-     * Check to make sure the response has results and/or is not an error.
-     *
-     * @return bool
-     */
-    private function hasErrorOrNoResults()
-    {
-        return $this->response['status'] != 'OK';
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -97,7 +35,7 @@ class GetAddressRequest implements RequestContract
      *
      * @return stdClass
      */
-    private function returnErrorResponse()
+    protected function returnErrorResponse()
     {
         $response = new stdClass;
         $response->error = $this->response['status'];
@@ -112,11 +50,27 @@ class GetAddressRequest implements RequestContract
     }
 
     /**
+     * We need to build the URL string.
+     *
+     * @return string
+     */
+    protected function apiUrl()
+    {
+        $encodedQuery = urlencode($this->lat . ',' . $this->lng);
+
+        if ($this->hasApiKey()) {
+            return "{$this->baseUrl}geocode/json?latlng={$encodedQuery}&key={$this->apiKey}";
+        }
+
+        return "{$this->baseUrl}geocode/json?latlng={$encodedQuery}";
+    }
+
+    /**
      * We will construct the results into an object and return it.
      *
      * @return stdClass
      */
-    private function returnResults()
+    protected function returnResults()
     {
         $response = new stdClass;
         $response->street_number = $this->response['results'][0]['address_components'][0]['long_name'] ?? null;

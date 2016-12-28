@@ -38,4 +38,5 @@ class GetAddressRequestTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($address->zip);
         $this->assertNull($address->formatted_address);
     }
+
 }

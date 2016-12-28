@@ -18,13 +18,20 @@ class GetAddress implements ServicesContract
     private $lng;
 
     /**
+     * @var string
+     */
+    private $apiKey;
+
+    /**
      * @param $lat
      * @param $lng
+     * @param $apiKey
      */
-    public function __construct($lat, $lng)
+    public function __construct($lat, $lng, $apiKey)
     {
         $this->lat = $lat;
         $this->lng = $lng;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -32,7 +39,7 @@ class GetAddress implements ServicesContract
      */
     public function handle()
     {
-        $request = new GetAddressRequest($this->lat, $this->lng);
+        $request = new GetAddressRequest($this->lat, $this->lng, $this->apiKey);
 
         return $request->receive();
     }
