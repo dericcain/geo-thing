@@ -29,5 +29,4 @@ class GetCoordinatesRequestTest extends PHPUnit_Framework_TestCase
         $this->assertNull($request->receive()->lng);
         $this->assertObjectHasAttribute('error', $request->receive());
     }
-
 }
